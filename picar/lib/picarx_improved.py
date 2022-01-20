@@ -3,23 +3,21 @@ import atexit
 import time
 
 try:
-    from ezblock import *
-    from ezblock import __reset_mcu__
-
-    __reset_mcu__()
+    from sim_ezblock import *
     time.sleep(0.01)
 except ImportError:
     print(
         "This computer does not appear to be a PiCar-X system (ezblock is not present). Shadowing hardware calls with "
         "substitute functions ")
-    from sim_ezblock import *
 
-from servo import Servo
-from pwm import PWM
-from pin import Pin
-from adc import ADC
-from filedb import fileDB
-
+    from servo import Servo
+    from pwm import PWM
+    from pin import Pin
+    from adc import ADC
+    from filedb import fileDB
+    from ezblock import __reset_mcu__
+    __reset_mcu__()
+    time.sleep(0.01)
 
 class Picarx(object):
     PERIOD = 4095
@@ -31,7 +29,7 @@ class Picarx(object):
         self.camera_servo_pin1 = Servo(PWM('P0'))
         self.camera_servo_pin2 = Servo(PWM('P1'))
         self.config_flie = fileDB('/home/pi/.config')
-        self.dir_cal_value = int(self.config_flie.get("picarx_dir_servo", default_value=-14))
+        self.dir_cal_value = int(self.config_flie.get("picarx_dir_servo", default_value=27))
         self.cam_cal_value_1 = int(self.config_flie.get("picarx_cam1_servo", default_value=0))
         self.cam_cal_value_2 = int(self.config_flie.get("picarx_cam2_servo", default_value=0))
         self.dir_servo_pin.angle(self.dir_cal_value)
@@ -58,7 +56,7 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
-        atexit.register(self.forward(0))
+        atexit.register(self.stop)
 
     def set_motor_speed(self, motor, speed):
         # global cali_speed_value,cali_dir_value
