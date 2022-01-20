@@ -31,7 +31,7 @@ class Picarx(object):
         self.camera_servo_pin1 = Servo(PWM('P0'))
         self.camera_servo_pin2 = Servo(PWM('P1'))
         self.config_flie = fileDB('/home/pi/.config')
-        self.dir_cal_value = int(self.config_flie.get("picarx_dir_servo", default_value=0))
+        self.dir_cal_value = int(self.config_flie.get("picarx_dir_servo", default_value=-14))
         self.cam_cal_value_1 = int(self.config_flie.get("picarx_cam1_servo", default_value=0))
         self.cam_cal_value_2 = int(self.config_flie.get("picarx_cam2_servo", default_value=0))
         self.dir_servo_pin.angle(self.dir_cal_value)
