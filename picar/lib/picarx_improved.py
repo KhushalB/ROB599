@@ -56,7 +56,7 @@ class Picarx(object):
             pin.period(self.PERIOD)
             pin.prescaler(self.PRESCALER)
 
-        atexit.register(self.stop)
+        atexit.register(self.cleanup)
 
     def set_motor_speed(self, motor, speed):
         # global cali_speed_value,cali_dir_value
@@ -187,6 +187,10 @@ class Picarx(object):
             self.set_motor_speed(2, -1 * speed)
 
     def stop(self):
+        self.set_motor_speed(1, 0)
+        self.set_motor_speed(2, 0)
+
+    def cleanup(self):
         self.set_motor_speed(1, 0)
         self.set_motor_speed(2, 0)
 
